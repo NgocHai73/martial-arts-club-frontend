@@ -1,0 +1,11 @@
+.post-detail-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .date {
+    font-size: 14px;
+    color: gray;
+  }
+  

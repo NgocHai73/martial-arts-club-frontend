@@ -1,0 +1,35 @@
+.posts-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .post-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .post-card {
+    background: #f4f4f4;
+    padding: 15px;
+    width: 250px;
+    border-radius: 8px;
+  }
+  
+  .post-card h3 {
+    margin: 0;
+  }
+  
+  .date {
+    font-size: 12px;
+    color: gray;
+  }
+  
+  .read-more {
+    display: inline-block;
+    margin-top: 10px;
+    color: blue;
+    text-decoration: none;
+  }
+  

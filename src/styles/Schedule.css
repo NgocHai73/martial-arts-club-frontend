@@ -1,0 +1,32 @@
+.schedule-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .calendar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .calendar-day {
+    padding: 10px;
+    background: #f4f4f4;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .calendar-day:hover {
+    background: #ddd;
+  }
+  
+  .schedule-detail {
+    margin-top: 20px;
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  

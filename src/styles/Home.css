@@ -1,0 +1,25 @@
+.hero {
+    text-align: center;
+    /* background: url('/public/hero.jpg') no-repeat center; */
+    background-size: cover;
+    padding: 100px 20px;
+    color: white;
+  }
+  
+  .about, .posts, .schedule, .events {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .post-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .post-card {
+    background: #eee;
+    padding: 15px;
+    width: 200px;
+  }
+  

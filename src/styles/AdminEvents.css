@@ -1,0 +1,82 @@
+.admin-page {
+    padding: 20px;
+  }
+  
+  .add-button {
+    background: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .add-button:hover {
+    background: #218838;
+  }
+  
+  .event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .event-form input {
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+  }
+  
+  .event-form button {
+    background: #007bff;
+    color: white;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .event-form button:hover {
+    background: #0056b3;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  table th {
+    background: #f4f4f4;
+  }
+  
+  .edit-button, .delete-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background: #ffc107;
+  }
+  
+  .edit-button:hover {
+    background: #e0a800;
+  }
+  
+  .delete-button {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background: #c82333;
+  }
+  

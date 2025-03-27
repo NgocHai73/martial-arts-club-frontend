@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Posts from "./pages/Posts";
+import PostDetail from "./pages/PostDetail";
+import Schedule from "./pages/Schedule";
+import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
+import AdminMembers from "./pages/admin/AdminMembers";
+import AdminPosts from "./pages/admin/AdminPosts";
+import AdminFinance from "./pages/admin/AdminFinance";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route path="/posts/:id" element={<PostDetail />} />
+        <Route path="/schedule" element={<Schedule />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/admin/members" element={<AdminMembers />} />
+        <Route path="/admin/posts" element={<AdminPosts />} />
+        <Route path="/admin/finance" element={<AdminFinance />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/members" element={<ProtectedRoute role="admin"><AdminMembers /></ProtectedRoute>} />
+<Route path="/admin/posts" element={<ProtectedRoute role="admin"><AdminPosts /></ProtectedRoute>} />
+<Route path="/admin/finance" element={<ProtectedRoute role="admin"><AdminFinance /></ProtectedRoute>} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 

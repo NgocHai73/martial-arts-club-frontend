@@ -1,0 +1,30 @@
+.events-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .event-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .event-card {
+    background: #f4f4f4;
+    padding: 15px;
+    width: 300px;
+    border-radius: 8px;
+  }
+  
+  .event-card h3 {
+    margin: 0;
+  }
+  
+  .event-detail-btn {
+    display: inline-block;
+    margin-top: 10px;
+    color: blue;
+    text-decoration: none;
+  }
+  
