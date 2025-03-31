@@ -1,163 +1,40 @@
-.admin-members-container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .member-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .member-table th, .member-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .member-table th {
-    background: #f8f9fa;
-  }
-  
-  .add-member-form {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .add-member-form input, .add-member-form select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .add-member-form button {
-    padding: 8px 15px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-member-form button:hover {
-    background: #218838;
-  }
-  .admin-page {
-  max-width: 800px;
-  margin: auto;
+.admin-page {
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  text-align: center;
-  color: #333;
-}
-
-/* 🔹 Nút dấu "+" */
-.add-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #007bff;
+.add-btn {
+  background-color: #28a745;
   color: white;
   font-size: 24px;
+  border: none;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
-  margin: 10px auto;
-  text-align: center;
 }
 
-.add-button:hover {
-  background: #0056b3;
-}
-
-/* 🔹 Form ẩn ban đầu */
-.schedule-form {
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.schedule-form.active {
+form {
   display: flex;
+  flex-direction: column;
+  margin-top: 10px;
 }
 
-.schedule-form input {
-  padding: 10px;
+input {
+  margin: 5px 0;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-.schedule-form button {
-  background: #28a745;
+button[type="submit"] {
+  background-color: #007bff;
   color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.schedule-form button:hover {
-  background: #218838;
-}
-
-/* 🔹 Bảng dữ liệu */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-table, th, td {
-  border: 1px solid #ddd;
-}
-
-th, td {
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  background: #007bff;
-  color: white;
-}
-
-/* 🔹 Nút Sửa/Xóa */
-button {
-  padding: 5px 10px;
-  margin: 5px;
+  padding: 8px;
   border: none;
   cursor: pointer;
 }
 
-button.edit {
-  background: #ffc107;
-  color: black;
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
-
-button.delete {
-  background: #dc3545;
-  color: white;
-}
-
-button.edit:hover {
-  background: #e0a800;
-}
-
-button.delete:hover {
-  background: #c82333;
-}
-
-  

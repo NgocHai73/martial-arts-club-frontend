@@ -4,68 +4,92 @@ import "../../styles/AdminMembers.css";
 
 const AdminMembers = () => {
   const [members, setMembers] = useState([]);
-  const [formData, setFormData] = useState({ name: "", email: "", belt: "" });
-  const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [editMode, setEditMode] = useState(false); // 🟢 Trạng thái chỉnh sửa
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [newMember, setNewMember] = useState({ name: "", email: "", phone: "", belt: "" });
+  const [error, setError] = useState("");
 
   useEffect(() => {
     API.get("/members")
       .then((res) => setMembers(res.data))
-      .catch((err) => console.error("Lỗi khi tải thành viên:", err));
+      .catch((err) => console.error("🔥 Lỗi khi tải thành viên:", err.response?.data || err));
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingId) {
-        await API.put(`/members/${editingId}`, formData);
-      } else {
-        await API.post("/members", formData);
-      }
-      setFormData({ name: "", email: "", belt: "" });
-      setEditingId(null);
-      setShowForm(false);
-      API.get("/members").then((res) => setMembers(res.data));
-    } catch (err) {
-      console.error("Lỗi khi thêm/cập nhật thành viên:", err);
-    }
-  };
-
-  const handleEdit = (member) => {
-    setFormData({ name: member.name, email: member.email, belt: member.belt });
-    setEditingId(member._id);
+  // 🟢 Hiển thị form để chỉnh sửa
+  const handleEditClick = (member) => {
+    setNewMember(member); // 🟢 Đổ dữ liệu thành viên vào form
+    setSelectedMemberId(member._id);
+    setEditMode(true);
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
-    await API.delete(`/members/${id}`);
-    API.get("/members").then((res) => setMembers(res.data));
+  // 🟢 Xử lý cập nhật thành viên
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await API.put(`/members/${selectedMemberId}`, newMember);
+      setMembers(members.map((m) => (m._id === selectedMemberId ? res.data : m)));
+      setEditMode(false);
+      setShowForm(false);
+      setNewMember({ name: "", email: "", phone: "", belt: "" });
+    } catch (err) {
+      console.error("❌ Lỗi khi cập nhật thành viên:", err.response?.data || err);
+      setError(err.response?.data?.message || "Lỗi không xác định!");
+    }
+  };
+
+  // 🟢 Thêm thành viên mới
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await API.post("/members", newMember);
+      setMembers([...members, res.data]);
+      setShowForm(false);
+      setNewMember({ name: "", email: "", phone: "", belt: "" });
+    } catch (err) {
+      console.error("❌ Lỗi khi thêm thành viên:", err.response?.data || err);
+      setError(err.response?.data?.message || "Lỗi không xác định!");
+    }
+  };
+
+  // 🟢 Xóa thành viên
+  const handleDeleteMember = async (id) => {
+    try {
+      await API.delete(`/members/${id}`);
+      setMembers(members.filter((m) => m._id !== id));
+    } catch (err) {
+      console.error("❌ Lỗi khi xóa:", err);
+    }
   };
 
   return (
     <div className="admin-page">
       <h2>👥 Quản Lý Thành Viên</h2>
+      <button className="add-btn" onClick={() => { setShowForm(!showForm); setEditMode(false); setNewMember({ name: "", email: "", phone: "", belt: "" }); }}>+</button>
 
-      <div className="add-button" onClick={() => setShowForm(!showForm)}>
-        {showForm ? "−" : "+"}
-      </div>
+      {showForm && (
+        <form onSubmit={editMode ? handleSaveEdit : handleAddMember}>
+          <input type="text" placeholder="Tên" value={newMember.name} onChange={(e) => setNewMember({ ...newMember, name: e.target.value })} required />
+          <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => setNewMember({ ...newMember, email: e.target.value })} required />
+          <input type="text" placeholder="Số điện thoại" value={newMember.phone} onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })} required />
+          <input type="text" placeholder="Cấp đai" value={newMember.belt} onChange={(e) => setNewMember({ ...newMember, belt: e.target.value })} required />
+          <button type="submit">{editMode ? "Lưu chỉnh sửa" : "Thêm"}</button>
+        </form>
+      )}
 
-      <form onSubmit={handleSubmit} className={`schedule-form ${showForm ? "active" : ""}`}>
-        <input type="text" name="name" placeholder="Tên" value={formData.name} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input type="text" name="belt" placeholder="Cấp đai" value={formData.belt} onChange={handleChange} required />
-        <button type="submit">{editingId ? "Cập nhật" : "Thêm"}</button>
-      </form>
+      {error && <p className="error-message">❌ {error}</p>}
 
       <table>
         <thead>
           <tr>
             <th>Tên</th>
             <th>Email</th>
+            <th>Số điện thoại</th>
             <th>Cấp đai</th>
             <th>Hành động</th>
           </tr>
@@ -75,10 +99,11 @@ const AdminMembers = () => {
             <tr key={member._id}>
               <td>{member.name}</td>
               <td>{member.email}</td>
+              <td>{member.phone}</td>
               <td>{member.belt}</td>
               <td>
-                <button className="edit" onClick={() => handleEdit(member)}>✏️ Sửa</button>
-                <button className="delete" onClick={() => handleDelete(member._id)}>🗑️ Xóa</button>
+                <button onClick={() => handleDeleteMember(member._id)}>🗑 Xóa</button>
+                <button onClick={() => handleEditClick(member)}>✏️ Sửa</button>
               </td>
             </tr>
           ))}

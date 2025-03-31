@@ -4,112 +4,148 @@ import "../../styles/AdminSchedules.css";
 
 const AdminSchedules = () => {
   const [schedules, setSchedules] = useState([]);
-  const [formData, setFormData] = useState({ date: "", activity: "" });
-  const [editingId, setEditingId] = useState(null);
-  const [showForm, setShowForm] = useState(false); // 🔹 State để ẩn/hiện form
-
-  // 🔹 Lấy danh sách lịch trình
-  const fetchSchedules = async () => {
-    try {
-      const res = await API.get("/schedules");
-      setSchedules(res.data);
-    } catch (err) {
-      console.error("Lỗi khi tải lịch trình:", err);
-    }
-  };
+  const [showForm, setShowForm] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
+  const [newSchedule, setNewSchedule] = useState({
+    title: "",
+    date: "",
+    time: "",
+    location: "",
+    description: "",
+  });
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetchSchedules();
+    API.get("/schedules")
+      .then((res) => {
+        console.log("📌 API response:", res.data);
+        setSchedules(res.data);
+      })
+      .catch((err) => console.error("🔥 Lỗi khi tải lịch tập:", err.response?.data || err));
   }, []);
 
-  // 🔹 Xử lý thay đổi input
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleEditClick = (schedule) => {
+    setNewSchedule(schedule);
+    setSelectedScheduleId(schedule._id);
+    setEditMode(true);
+    setShowForm(true);
   };
 
-  // 🔹 Thêm hoặc cập nhật lịch trình
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
+    const formData = new FormData();
+    formData.append("title", newSchedule.title);
+    formData.append("date", newSchedule.date);
+    formData.append("time", newSchedule.time);
+    formData.append("location", newSchedule.location);
+    formData.append("description", newSchedule.description);
+
     try {
-      if (editingId) {
-        await API.put(`/schedules/${editingId}`, formData);
-      } else {
-        await API.post("/schedules", formData);
-      }
-      setFormData({ date: "", activity: "" });
-      setEditingId(null);
-      setShowForm(false); // 🔹 Ẩn form sau khi thêm/cập nhật
-      fetchSchedules();
+      const res = editMode
+        ? await API.put(`/schedules/${selectedScheduleId}`, formData)
+        : await API.post("/schedules", formData);
+
+      setSchedules(editMode ? schedules.map((s) => (s._id === selectedScheduleId ? res.data : s)) : [...schedules, res.data]);
+      setEditMode(false);
+      setShowForm(false);
+      setNewSchedule({ title: "", date: "", time: "", location: "", description: "" });
     } catch (err) {
-      console.error("Lỗi khi thêm/cập nhật lịch trình:", err);
+      console.error("❌ Lỗi:", err.response?.data || err);
+      setError(err.response?.data?.message || "Lỗi không xác định!");
     }
   };
 
-  // 🔹 Chỉnh sửa lịch trình
-  const handleEdit = (schedule) => {
-    setFormData({ date: schedule.date, activity: schedule.activity });
-    setEditingId(schedule._id);
-    setShowForm(true); // 🔹 Hiển thị form khi sửa
-  };
+  const handleDeleteSchedule = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa lịch tập này không?")) return;
 
-  // 🔹 Xóa lịch trình
-  const handleDelete = async (id) => {
     try {
       await API.delete(`/schedules/${id}`);
-      fetchSchedules();
+      setSchedules(schedules.filter((s) => s._id !== id));
     } catch (err) {
-      console.error("Lỗi khi xóa lịch trình:", err);
+      console.error("❌ Lỗi khi xóa:", err);
+      alert("Không thể xóa lịch tập!");
     }
   };
 
   return (
     <div className="admin-page">
-      <h2>📅 Quản Lý Lịch Trình</h2>
+      <h2>📅 Quản Lý Lịch Tập</h2>
+      <button
+        className="add-btn"
+        onClick={() => {
+          setShowForm(!showForm);
+          setEditMode(false);
+          setNewSchedule({ title: "", date: "", time: "", location: "", description: "" });
+        }}
+      >
+        +
+      </button>
 
-      {/* 🔹 Nút dấu "+" để mở form */}
-      <div className="add-button" onClick={() => setShowForm(!showForm)}>
-        {showForm ? "−" : "+"}
-      </div>
+      {showForm && (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Tiêu đề"
+            value={newSchedule.title}
+            onChange={(e) => setNewSchedule({ ...newSchedule, title: e.target.value })}
+            required
+          />
+          <input
+            type="date"
+            value={newSchedule.date}
+            onChange={(e) => setNewSchedule({ ...newSchedule, date: e.target.value })}
+            required
+          />
+          <input
+            type="time"
+            value={newSchedule.time}
+            onChange={(e) => setNewSchedule({ ...newSchedule, time: e.target.value })}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Địa điểm"
+            value={newSchedule.location}
+            onChange={(e) => setNewSchedule({ ...newSchedule, location: e.target.value })}
+            required
+          />
+          <textarea
+            placeholder="Mô tả"
+            value={newSchedule.description}
+            onChange={(e) => setNewSchedule({ ...newSchedule, description: e.target.value })}
+            required
+          />
+          <button type="submit">{editMode ? "Lưu chỉnh sửa" : "Thêm"}</button>
+        </form>
+      )}
 
-      {/* 🔹 Form nhập liệu ẩn/hiện */}
-      <form onSubmit={handleSubmit} className={`schedule-form ${showForm ? "active" : ""}`}>
-        <input
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="activity"
-          placeholder="Hoạt động"
-          value={formData.activity}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">
-          {editingId ? "Cập nhật" : "Thêm"}
-        </button>
-      </form>
+      {error && <p className="error-message">❌ {error}</p>}
 
-      {/* 🔹 Bảng danh sách lịch trình */}
       <table>
         <thead>
           <tr>
+            <th>Tiêu đề</th>
             <th>Ngày</th>
-            <th>Hoạt động</th>
+            <th>Giờ</th>
+            <th>Địa điểm</th>
+            <th>Mô tả</th>
             <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
           {schedules.map((schedule) => (
             <tr key={schedule._id}>
-              <td>{schedule.date}</td>
-              <td>{schedule.activity}</td>
+              <td>{schedule.title}</td>
+              <td>{new Date(schedule.date).toLocaleDateString()}</td>
+              <td>{schedule.time}</td>
+              <td>{schedule.location}</td>
+              <td>{schedule.description}</td>
               <td>
-                <button className="edit" onClick={() => handleEdit(schedule)}>✏️ Sửa</button>
-                <button className="delete" onClick={() => handleDelete(schedule._id)}>🗑️ Xóa</button>
+                <button onClick={() => handleDeleteSchedule(schedule._id)}>🗑 Xóa</button>
+                <button onClick={() => handleEditClick(schedule)}>✏️ Sửa</button>
               </td>
             </tr>
           ))}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../../services/api";
 import { Link } from "react-router-dom";
-import "../../styles/AdminPage.css";
+import "../../styles/AdminDb.css";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -15,36 +15,79 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const members = await API.get("/members");
-        const posts = await API.get("/posts");
-        const schedules = await API.get("/schedules");
-        const events = await API.get("/events");
-        const finance = await API.get("/finance");
-
-        setStats({
-          members: members.data.length,
-          posts: posts.data.length,
-          schedules: schedules.data.length,
-          events: events.data.length,
-          finance: finance.data.reduce((sum, item) => sum + item.amount, 0),
-        });
+        const membersRes = await API.get("/members");
+        setStats((prev) => ({
+          ...prev,
+          members: membersRes.data.length, // ✅ Lấy số lượng thành viên
+        }));
       } catch (error) {
-        console.error("Lỗi khi tải thống kê:", error);
+        console.error("🔥 Lỗi khi tải thống kê thành viên:", error);
       }
     };
 
     fetchStats();
   }, []);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const eventsRes = await API.get("/events");
+        setStats((prev) => ({
+          ...prev,
+          events: eventsRes.data.length, // ✅ Lấy số lượng thành viên
+        }));
+      } catch (error) {
+        console.error("🔥 Lỗi khi tải thống kê thành viên:", error);
+      }
+    };
 
+    fetchStats();
+  }, []);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const postsRes = await API.get("/posts");
+        setStats((prev) => ({
+          ...prev,
+          posts: postsRes.data.length, // ✅ 
+        }));
+      } catch (error) {
+        console.error("🔥 Lỗi khi tải thống kê bài viết:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const schedulesRes = await API.get("/schedules");
+        setStats((prev) => ({
+          ...prev,
+          schedules: schedulesRes.data.length, // ✅ 
+        }));
+      } catch (error) {
+        console.error("🔥 Lỗi khi tải thống kê bài viết:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
   return (
     <div className="admin-dashboard">
       <h2>📊 Tổng Quan Admin</h2>
       <div className="dashboard-grid">
-        <Link to="/admin/members" className="dashboard-card">👥 Thành viên: {stats.members}</Link>
-        <Link to="/admin/posts" className="dashboard-card">📝 Bài viết: {stats.posts}</Link>
-        <Link to="/admin/schedules" className="dashboard-card">📅 Lịch tập: {stats.schedules}</Link>
-        <Link to="/admin/events" className="dashboard-card">🎉 Sự kiện: {stats.events}</Link>
-        <Link to="/admin/finance" className="dashboard-card">💰 Quỹ: {stats.finance.toLocaleString()} VND</Link>
+        <Link to="/admin/members" className="dashboard-card">
+          👥 Thành viên: {stats.members} người
+        </Link>
+        <Link to="/admin/posts" className="dashboard-card">
+          📝 Bài viết: {stats.posts} bài
+          </Link>
+        <Link to="/admin/schedules" className="dashboard-card">
+          📅 Lịch tập: {stats.schedules} lịch
+          </Link>
+        <Link to="/admin/events" className="dashboard-card">
+        🎉 Sự kiện: {stats.events} sự kiện
+        </Link>
       </div>
     </div>
   );

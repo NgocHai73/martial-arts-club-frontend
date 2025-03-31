@@ -13,6 +13,8 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminEvent from "./pages/admin/AdminEvents";
+import AdminSchedules from "./pages/admin/AdminSchedules";
 
 function App() {
   return (
@@ -26,7 +28,10 @@ function App() {
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/admin/members" element={<AdminMembers />} />
         <Route path="/admin/posts" element={<AdminPosts />} />
+        <Route path="/admin/events" element={<AdminEvent />} />
         <Route path="/admin/finance" element={<AdminFinance />} />
+        
+        <Route path="/admin/schedules" element={<AdminSchedules />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
